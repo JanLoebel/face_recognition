@@ -1,0 +1,9 @@
+sudo: required
+
+services:
+  - docker
+
+script:
+  docker build -t facerec_service .
+  docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  docker push najjannaj/face_recognition
