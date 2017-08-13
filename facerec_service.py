@@ -3,7 +3,7 @@ from os.path import isfile, join, splitext
 
 import face_recognition
 from flask import Flask, jsonify, request
-from werkzeug.exceptions import bad_request
+from werkzeug.exceptions import BadRequest
 
 # Global storage for images
 faces_dict = {}
@@ -88,7 +88,7 @@ def web_recognize():
         # The image file seems valid! Detect faces and return the result.
         return jsonify(detect_faces_in_image(file))
     else:
-        raise bad_request("Given file is invalid!")
+        raise BadRequest("Given file is invalid!")
 
 
 @app.route('/faces', methods=['GET', 'POST', 'DELETE'])
@@ -100,14 +100,14 @@ def web_faces():
     # POST/DELETE
     file = extract_image(request)
     if 'id' not in request.args:
-        raise bad_request("Identifier for the face was not given!")
+        raise BadRequest("Identifier for the face was not given!")
 
     if request.method == 'POST':
         try:
             new_encoding = calc_face_encoding(file)
             faces_dict.update({request.args.get('id'): new_encoding})
         except Exception as exception:
-            raise bad_request(exception)
+            raise BadRequest(exception)
 
     elif request.method == 'DELETE':
         faces_dict.pop(request.args.get('id'))
@@ -118,11 +118,11 @@ def web_faces():
 def extract_image(request):
     # Check if a valid image file was uploaded
     if 'file' not in request.files:
-        raise bad_request("Missing file parameter!")
+        raise BadRequest("Missing file parameter!")
 
     file = request.files['file']
     if file.filename == '':
-        raise bad_request("Given file is invalid")
+        raise BadRequest("Given file is invalid")
 
     return file
 # </Controller>
