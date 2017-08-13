@@ -20,7 +20,7 @@ def is_picture(filename):
 
 
 def get_all_picture_files(path):
-    files_in_dir = [f for f in listdir(path) if isfile(join(path, f))]
+    files_in_dir = [join(path, f) for f in listdir(path) if isfile(join(path, f))]
     return [f for f in files_in_dir if is_picture(f)]
 
 

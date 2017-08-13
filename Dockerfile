@@ -35,10 +35,9 @@ RUN cd ~ && \
     python3 setup.py install --yes USE_AVX_INSTRUCTIONS
 
 
-# Install Flask & Werkzeug
+# Install Flask
 RUN cd ~ && \
-    pip3 install flask && \
-    pip3 install Werkzeug
+    pip3 install flask
 
 
 # Install Face-Recognition Python Library
