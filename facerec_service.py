@@ -25,8 +25,7 @@ def get_all_picture_files(path):
 
 
 def remove_file_ext(filename):
-    return splitext(filename)[0]
-
+    return splitext(filename.rsplit('/', 1)[-1])[0]
 
 def calc_face_encoding(image):
     # Currently only use first face found on picture
