@@ -3,6 +3,7 @@ from os.path import isfile, join, splitext
 
 import face_recognition
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from werkzeug.exceptions import BadRequest
 
 # Global storage for images
@@ -10,6 +11,7 @@ faces_dict = {}
 
 # Create flask app
 app = Flask(__name__)
+CORS(app)
 
 # <Picture functions> #
 
