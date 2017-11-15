@@ -44,7 +44,6 @@ RUN cd ~ && \
     mkdir -p face_recognition && \
     git clone https://github.com/ageitgey/face_recognition.git face_recognition/ && \
     cd face_recognition/ && \
-    git checkout tags/v0.1.12 && \
     pip3 install -r requirements.txt && \
     python3 setup.py install
 
