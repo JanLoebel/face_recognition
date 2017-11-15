@@ -1,4 +1,3 @@
-
 FROM python:3.4-slim
 
 RUN apt-get -y update && \
@@ -30,7 +29,7 @@ RUN apt-get -y update && \
 # Install DLIB
 RUN cd ~ && \
     mkdir -p dlib && \
-    git clone -b 'v19.4' --single-branch https://github.com/davisking/dlib.git dlib/ && \
+    git clone -b 'v19.7' --single-branch https://github.com/davisking/dlib.git dlib/ && \
     cd  dlib/ && \
     python3 setup.py install --yes USE_AVX_INSTRUCTIONS
 
