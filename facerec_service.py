@@ -64,15 +64,23 @@ def detect_faces_in_image(file_stream):
     faces = []
 
     if faces_found:
+        face_encodings = list(faces_dict.values())
         for uploaded_face in uploaded_faces:
             match_results = face_recognition.compare_faces(
-                list(faces_dict.values()), uploaded_face)
+                face_encodings, uploaded_face)
             for idx, match in enumerate(match_results):
                 if match:
-                    faces.append(list(faces_dict.keys())[idx])
+                    match = list(faces_dict.keys())[idx]
+                    match_encoding = face_encodings[idx]
+                    dist = face_recognition.face_distance([match_encoding],
+                            uploaded_face)[0]
+                    faces.append({
+                        "id": match,
+                        "dist": dist
+                    })
 
     return {
-        "faces_count": faces_found,
+        "count": faces_found,
         "faces": faces
     }
 
