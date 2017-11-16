@@ -41,7 +41,7 @@ with TemporaryDirectory() as tmp_dir:
         # Checking return status
         if result.status_code == 200:
             result_dict = result.json()
-            faces_count = result_dict['faces_count']
+            faces_count = result_dict['count']
 
             # If there are faces found, check which ones
             if faces_count > 0:
