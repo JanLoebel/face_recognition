@@ -2,6 +2,8 @@
 
 This project provides a docker image which offers a web service to recognize known faces on images. It's based on the great [ageitgey/face_recognition](https://github.com/ageitgey/face_recognition) project and just add a web service using the Python `face_recognition`-library.
 
+<a href="https://www.buymeacoffee.com/JanLoebel" rel="Buy me a coffee!">![Foo](https://cdn.buymeacoffee.com/buttons/default-orange.png)</a>
+
 ## Get started
 
 ### Build the Docker image
