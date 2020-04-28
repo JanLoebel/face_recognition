@@ -1,4 +1,4 @@
-from os import listdir
+from os import listdir, remove
 from os.path import isfile, join, splitext
 
 import face_recognition
@@ -115,7 +115,7 @@ def web_faces():
     if request.method == 'POST':
         app.logger.info('%s loaded', file.filename)
         # HINT jpg included just for the image check -> this is faster then passing boolean var through few methods
-        # TODO add method for extension persistence
+        # TODO add method for extension persistence - do not forget abut the deletion
         file.save("{0}/{1}.jpg".format(persistent_faces, request.args.get('id')))
         try:
             new_encoding = calc_face_encoding(file)
@@ -124,8 +124,8 @@ def web_faces():
             raise BadRequest(exception)
 
     elif request.method == 'DELETE':
-        # TODO remove the file form persistent storage - file system
         faces_dict.pop(request.args.get('id'))
+        remove("{0}/{1}.jpg".format(persistent_faces, request.args.get('id')))
 
     return jsonify(list(faces_dict.keys()))
 
