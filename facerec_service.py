@@ -1,4 +1,4 @@
-from os import listdir
+from os import listdir, remove
 from os.path import isfile, join, splitext
 
 import face_recognition
@@ -8,6 +8,7 @@ from werkzeug.exceptions import BadRequest
 
 # Global storage for images
 faces_dict = {}
+persistent_faces = "/root/faces"
 
 # Create flask app
 app = Flask(__name__)
@@ -49,7 +50,7 @@ def calc_face_encoding(image):
 def get_faces_dict(path):
     image_files = get_all_picture_files(path)
     return dict([(remove_file_ext(image), calc_face_encoding(image))
-                 for image in image_files])
+        for image in image_files])
 
 
 def detect_faces_in_image(file_stream):
@@ -112,6 +113,10 @@ def web_faces():
         raise BadRequest("Identifier for the face was not given!")
 
     if request.method == 'POST':
+        app.logger.info('%s loaded', file.filename)
+        # HINT jpg included just for the image check -> this is faster then passing boolean var through few methods
+        # TODO add method for extension persistence - do not forget abut the deletion
+        file.save("{0}/{1}.jpg".format(persistent_faces, request.args.get('id')))
         try:
             new_encoding = calc_face_encoding(file)
             faces_dict.update({request.args.get('id'): new_encoding})
@@ -120,6 +125,7 @@ def web_faces():
 
     elif request.method == 'DELETE':
         faces_dict.pop(request.args.get('id'))
+        remove("{0}/{1}.jpg".format(persistent_faces, request.args.get('id')))
 
     return jsonify(list(faces_dict.keys()))
 
@@ -140,7 +146,8 @@ def extract_image(request):
 if __name__ == "__main__":
     print("Starting by generating encodings for found images...")
     # Calculate known faces
-    faces_dict = get_faces_dict("/root/faces")
+    faces_dict = get_faces_dict(persistent_faces)
+    print(faces_dict)
 
     # Start app
     print("Starting WebServer...")
