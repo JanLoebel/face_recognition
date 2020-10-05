@@ -1,4 +1,6 @@
-FROM python:3.4-slim
+FROM python:3.7
+
+WORKDIR /usr/src/app
 
 RUN apt-get -y update && \
     apt-get install -y --fix-missing \
@@ -10,7 +12,7 @@ RUN apt-get -y update && \
     curl \
     graphicsmagick \
     libgraphicsmagick1-dev \
-    libatlas-dev \
+    libatlas-base-dev \
     libavcodec-dev \
     libavformat-dev \
     libboost-all-dev \
@@ -19,25 +21,33 @@ RUN apt-get -y update && \
     liblapack-dev \
     libswscale-dev \
     pkg-config \
+    python-pip \
+    python3 \
+    python3-pip \
+    python3-opencv \
     python3-dev \
     python3-numpy \
     software-properties-common \
     zip \
     && apt-get clean && rm -rf /tmp/* /var/tmp/*
 
+RUN python -m venv venv
+RUN . venv/bin/activate \
+        && pip install --upgrade pip
+
 
 # Install DLIB
 RUN cd ~ && \
     mkdir -p dlib && \
-    git clone -b 'v19.7' --single-branch https://github.com/davisking/dlib.git dlib/ && \
+    git clone -b 'v19.20' --single-branch https://github.com/davisking/dlib.git dlib/ && \
     cd  dlib/ && \
-    python3 setup.py install --yes USE_AVX_INSTRUCTIONS
+    python3 setup.py install
 
+COPY requirements.txt /usr/src/app/
+RUN pip install -r requirements.txt
 
-# Install Flask
 RUN cd ~ && \
     pip3 install flask flask-cors
-
 
 # Install Face-Recognition Python Library
 RUN cd ~ && \
@@ -49,9 +59,8 @@ RUN cd ~ && \
 
 
 # Copy web service script
-COPY facerec_service.py /root/facerec_service.py
+COPY . /usr/src/app/
 
+#RUN python3 main.py
+CMD ["python3","main.py"]
 
-# Start the web service
-CMD cd /root/ && \
-    python3 facerec_service.py
